@@ -1,0 +1,154 @@
+<%if (distro === 'vim') { %>
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" Plugins
+<% for(var i=0; i < plugins.length; i++) { %>
+Plugin '<%= plugins[i] %>'
+<% } %>
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+<% } else { %>
+" Note: Skip initialization for vim-tiny or vim-small.
+if 0 | endif
+
+if &compatible
+  set nocompatible               " Be iMproved
+endif
+
+" Required:
+set runtimepath+=~/.vim/bundle/neobundle.vim/
+
+" Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+" Let NeoBundle manage NeoBundle
+" Required:
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" My Bundles here:
+" Refer to |:NeoBundle-examples|.
+" Note: You don't set neobundle setting in .gvimrc!
+<% for(var i=0; i < plugins.length; i++) { %>
+NeoBundle '<%= plugins[i] %>'
+<% } %>
+
+call neobundle#end()
+
+" Required:
+filetype plugin indent on
+
+" If there are uninstalled bundles found on startup,
+" this will conveniently prompt you to install them.
+NeoBundleCheck
+<% } %>
+
+let g:deoplete#enable_at_startup = 1
+
+let mapleader = ","
+
+map <Leader>n :NERDTreeToggle <Esc>
+map <Leader>s :call ToggleScheme()  <Esc>
+map <Leader>e :edit <Esc>
+map <Leader>p :CtrlP <Esc>
+map <Leader>a :Ag <Space>
+map <Leader>j :call FormatJson() <Esc>
+map <Leader>u :noh <Esc>
+map <Leader>w :w <Esc>
+
+map <M-BS> :nohls<CR>
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+inoremap jj <ESC>
+inoremap jk <ESC>
+inoremap fd <ESC>
+imap cll console.log()<Esc>==f(a
+
+" Set GUI customizations
+syntax on
+set nowrap
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set guioptions-=L
+set guioptions-=r
+set guifont=Hack\ Regular
+"set clipboard+=unnamedplus
+set notermguicolors
+
+" Ctrlp
+set wildignore+=*/node_modules/*
+
+" Nerdtree
+let g:NERDTreeNodeDelimiter = "\u00a0"
+
+" Markdown preview
+let vim_markdown_preview_hotkey='<C-m>'
+
+" React for js ext
+let g:jsx_ext_required = 0
+
+" Easyclip
+let g:EasyClipShareYanks = 1
+let g:EasyClipAutoFormat = 1
+let g:EasyClipUsePasteToggleDefaults = 0
+nmap <c-f> <plug>EasyClipSwapPasteForward
+nmap <c-F> <plug>EasyClipSwapPasteBackwards
+
+" Vim airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#branch#enabled = 1
+let g:airline_powerline_fonts = 1
+
+" JS syntax tweaks
+let javascript_enable_domhtmlcss = 1
+
+" Prettier
+let g:prettier#config#print_width = 65
+let g:prettier#config#bracket_spacing = 'true'
+let g:prettier#config#semi = 'false'
+let g:prettier#config#single_quote = 'true'
+let g:prettier#config#trailing_comma = 'none'
+let g:prettier#autoformat = 0
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.vue,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+
+" Launch colorscheme based on time of day
+if strftime("%H") >= 7 && strftime("%H") < 17
+  let g:solarized_termcolors=256
+  syntax enable
+  colorscheme solarized
+  set background=light
+  let g:airline_theme='badwolf'
+else
+  syntax enable
+  colorscheme molokai
+  let g:airline_theme='simple'
+endif
+
+" Toggle colorscheme
+fu! ToggleScheme()
+  if g:colors_name == 'molokai'
+    let g:solarized_termcolors=256
+    colorscheme solarized
+    set background=light
+  else
+    colorscheme molokai
+  endif
+endfunction
+
+" Format json
+fu! FormatJson()
+  execute '%!python -m json.tool' | w
+endfunction

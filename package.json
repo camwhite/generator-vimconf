@@ -1,0 +1,14 @@
+{
+  "name": "generator-vimconf",
+  "version": "0.1.0",
+  "files": [
+    "generators"
+  ],
+  "main": "generators/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "yeoman-generator": "^3.2.0",
+    "yosay": "^2.0.2"
+  }
+}
